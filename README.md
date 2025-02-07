@@ -1,6 +1,6 @@
 ## A novel approach for biclustering bipartite networks: an extension of finite mixtures of latent trait analyzers
 
-we extend the mixture of latent trait analyzers (MLTA) model developed by Gollini and Murphy (2014) and Gollini (2020) to perform a joint clustering of the two disjoint sets of nodes of a bipartite network,
+We extend the mixture of latent trait analyzers (MLTA) model developed by Gollini and Murphy (2014) and Gollini (2020) to perform a joint clustering of the two disjoint sets of nodes of a bipartite network,
 as in the biclustering framework. In detail, sending nodes are partitioned into clusters (called components) via a finite mixture of latent trait models. In each component, receiving nodes are partitioned into clusters (called segments) by adopting a flexible and parsimonious specification of the linear predictor. Residual dependence between receiving nodes is modeled via a multidimensional latent trait, as in the original MLTA specification. Furthermore, by incorporating nodal attributes into the model’s latent layer, we gain insight into how these attributes impact the formation of components. To estimate model parameters, an EM-type algorithm based on a Gauss-Hermite approximation of intractable integrals is proposed.
 
 #### Files
