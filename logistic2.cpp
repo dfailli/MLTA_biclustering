@@ -1,0 +1,50 @@
+#include <RcppArmadillo.h>
+// [[Rcpp::depends(RcppArmadillo)]]
+using namespace Rcpp;
+using namespace arma;
+
+// [[Rcpp::export]]
+Rcpp::NumericVector callLogisticRegressionm(arma::mat yy,
+                                            arma::mat xxm,
+                                            arma::mat offsm,
+                                            arma::mat ww22,
+                                            arma::vec coeffm) {
+  
+  int QGMN = xxm.n_rows;
+  int P = xxm.n_cols;
+  
+  int maxIterations = 100;
+  double convergenceThreshold = 1e-6;
+  
+  arma::mat onesMatrix(QGMN, 1, arma::fill::ones);
+  
+  for (int iteration = 0; iteration < maxIterations; iteration++) {
+    arma::mat linp = xxm * coeffm + offsm;
+    arma::mat pi = onesMatrix / (onesMatrix + exp(-linp));
+    
+    arma::vec gradient = xxm.t() * (ww22 % (yy - pi));
+    
+    arma::mat hessian(P, P, arma::fill::zeros);
+    
+    for (int i = 0; i < QGMN; i++) {
+      arma::rowvec xx_i = xxm.row(i);
+      arma::rowvec pdis = pi.row(i);
+      arma::rowvec we = ww22.row(i);
+      
+      arma::mat Fi = xx_i.t() * (we % (arma::diagmat(pdis) - pdis.t() * pdis)) * xx_i;
+      hessian += Fi;
+    }
+    
+    arma::vec delta = solve(hessian, gradient, solve_opts::fast);
+    
+    coeffm += delta;
+    
+    double deltaNorm = norm(delta, 2);
+    
+    if (deltaNorm < convergenceThreshold) {
+      break;
+    }
+  }
+  
+  return wrap(coeffm);
+}
